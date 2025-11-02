@@ -48,6 +48,8 @@ char * read_file(const char * const path) {
 
         size_t cap = 4096;
         char buf[4096];
+        r = (char*)malloc(cap * sizeof(char));
+        if (!r) { return r; }
 
         while (true) {
             size_t len = 0;
