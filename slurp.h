@@ -46,27 +46,32 @@ char * read_file(const char * const path) {
         FILE * f = fdopen(fd, "re");
         if (!f) { return r; }
 
+        size_t len = 0;
         size_t cap = 4096;
         char buf[4096];
         r = (char*)malloc(cap * sizeof(char));
         if (!r) { return r; }
 
         while (true) {
-            size_t len = 0;
             size_t bytes = fread(buf, 1, sizeof(buf), f);
-            if (ferror(f)) { free(r); return NULL; }
-            if (feof(f)) { return r; }
+            if (ferror(f)) { free(r); goto error; }
 
             if (bytes > 0) {
                 while (len + bytes > cap) {
                     cap *= 2;
                     r = realloc(r, cap);
-                    if (!r) { return r; }
+                    if (!r) { goto error; }
                 }
                 memcpy(r + len, buf, bytes);
                 len += bytes;
             }
+
+            if (feof(f)) { break; }
         }
+
+        r[len] = '\0';
+      error:
+        fclose(f);
     }
 
     return r;
