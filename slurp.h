@@ -110,7 +110,7 @@ int append_file(const char * const path, const char * const s) {
 
 static inline
 int prepend_file_file(const char * const path, const char * const s) {
-    const char * const saved_contents = read_file(path);
+    char * const saved_contents = read_file(path);
     if (overwrite_file(path, s)) { return 1; }
     if (append_file(path, saved_contents)) { return 1; }
     free(saved_contents);
