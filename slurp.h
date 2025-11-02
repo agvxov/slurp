@@ -54,7 +54,8 @@ char * read_file(const char * const path) {
         while (true) {
             size_t len = 0;
             size_t bytes = fread(buf, 1, sizeof(buf), f);
-            if (ferror(f)) { return r; }
+            if (ferror(f)) { free(r); return NULL; }
+            if (feof(f)) { return r; }
 
             if (bytes > 0) {
                 while (len + bytes > cap) {
