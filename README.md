@@ -37,3 +37,4 @@ Currently only Linux is supported.
 * file descriptor variants with generic wrappers
 * line oriented variants
 * support for `FILE*` like construct -such as `FCGX_Stream*`- with metaprogramming
+* add `read_file_get_size(char*, size_t*);`, make slurp a wrapper
