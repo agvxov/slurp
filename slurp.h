@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 
 static char * read_file(const char * const path);
+static char * read_file_get_size(const char * const path, size_t * size);
 static inline int write_file(const char * const path, const char * const s);
 static inline int overwrite_file(const char * const path, const char * const s);
 static inline int append_file(const char * const path, const char * const s);
@@ -20,9 +21,11 @@ static inline int prepend_file(const char * const path, const char * const s);
 static inline char * slurp(const char * const path) { return read_file(path); }
 
 // ---
+
 static
-char * read_file(const char * const path) {
+char * read_file_get_size(const char * const path, size_t * size) {
     char * r = NULL;
+    *size = 0;
 
     int fd = open(path, O_RDONLY | O_CLOEXEC);
     if (fd == -1) { return r; }
@@ -38,6 +41,7 @@ char * read_file(const char * const path) {
         ssize_t bytes_read = 0;
         for (ssize_t n; bytes_read < len; bytes_read += n) {
             n = read(fd, r + bytes_read, len - bytes_read);
+            *size += n;
             if (n == -1) { return r; }
             if (n == 0) { break; }
         }
@@ -65,6 +69,7 @@ char * read_file(const char * const path) {
                 }
                 memcpy(r + len, buf, bytes);
                 len += bytes;
+                *size += bytes;
             }
 
             if (feof(f)) { break; }
@@ -75,6 +80,13 @@ char * read_file(const char * const path) {
         fclose(f);
     }
 
+    return r;
+}
+
+static
+char * read_file(const char * const path) {
+    size_t discarder;
+    char * r = read_file_get_size(path, &discarder);
     return r;
 }
 
