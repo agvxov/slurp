@@ -1,4 +1,5 @@
 // @BAKE gcc -o $*.out $@ -Wall -Wpedantic -lcriterion -O0 -ggdb
+#define SLURP_IMPLEMENTATION
 #include "slurp.h"
 #include <criterion/criterion.h>
 
