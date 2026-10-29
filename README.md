@@ -41,3 +41,4 @@ Currently only Linux is supported.
 * file descriptor variants with generic wrappers
 * line oriented variants
 * support for `FILE*` like construct -such as `FCGX_Stream*`- with metaprogramming
+* "spew" alias for write_file
